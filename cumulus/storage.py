@@ -5,6 +5,7 @@ from datetime import datetime
 
 from django.core.files.base import File
 from django.core.files.storage import Storage
+from django.utils.encoding import force_text
 
 from cumulus.settings import CUMULUS
 from cumulus.utils import (get_digest, gzip_content, read_gzipped_content,
@@ -200,6 +201,19 @@ class SwiftclientStorage(Storage):
                                        headers=headers)
 
         return name
+
+    def save(self, name, content):
+        """
+        Don't check for an available name before saving, just overwrite.
+        """
+        # Get the proper name for the file, as it will actually be saved.
+        if name is None:
+            name = content.name
+
+        name = self._save(name, content)
+
+        # Store filenames with forward slashes, even on Windows
+        return force_text(name.replace('\\', '/'))
 
     def delete(self, name):
         """
