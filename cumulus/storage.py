@@ -71,7 +71,7 @@ class SwiftclientStorage(Storage):
         if CUMULUS["USE_PYRAX"]:
             if CUMULUS["PYRAX_IDENTITY_TYPE"]:
                 pyrax.set_setting("identity_type", CUMULUS["PYRAX_IDENTITY_TYPE"])
-            pyrax.set_credentials(self.username, self.api_key, authenticate=False)
+            pyrax.set_credentials(self.username, self.api_key)
 
     def __getstate__(self):
         """
