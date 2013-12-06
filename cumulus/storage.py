@@ -71,7 +71,7 @@ class SwiftclientStorage(Storage):
         if CUMULUS["USE_PYRAX"]:
             if CUMULUS["PYRAX_IDENTITY_TYPE"]:
                 pyrax.set_setting("identity_type", CUMULUS["PYRAX_IDENTITY_TYPE"])
-            pyrax.set_credentials(self.username, self.api_key)
+            pyrax.set_credentials(self.username, self.api_key, authenticate=False)
 
     def __getstate__(self):
         """
@@ -89,6 +89,7 @@ class SwiftclientStorage(Storage):
         if not hasattr(self, "_connection"):
             if CUMULUS["USE_PYRAX"]:
                 public = not self.use_snet  # invert
+                pyrax.set_credentials(self.username, self.api_key, authenticate=True)
                 self._connection = pyrax.connect_to_cloudfiles(region=self.region,
                                                                public=public)
             else:
@@ -410,6 +411,7 @@ class ThreadSafeMixin(object):
     def _get_connection(self):
         if not hasattr(self._local_cache, "connection"):
             public = not self.use_snet  # invert
+            pyrax.set_credentials(self.username, self.api_key, authenticate=True)
             connection = pyrax.connect_to_cloudfiles(region=self.region,
                                                      public=public)
             self._local_cache.connection = connection
