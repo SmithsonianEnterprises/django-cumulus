@@ -169,6 +169,8 @@ class SwiftclientStorage(Storage):
         Uses the Swiftclient service to write ``content`` to a remote
         file (called ``name``).
         """
+        # Force the content type guess
+        del content.file.content_type
         content_type = get_content_type(content, name)
 
         headers = {"Content-Type": content_type}
