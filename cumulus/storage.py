@@ -173,6 +173,7 @@ class SwiftclientStorage(Storage):
         if hasattr(content.file, 'content_type'):
             del content.file.content_type
         content_type = get_content_type(content, name)
+        content.file.content_type = content_type
 
         headers = {"Content-Type": content_type}
 
