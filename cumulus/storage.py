@@ -179,10 +179,12 @@ class SwiftclientStorage(Storage):
             content.file.content_type = content_type
         except AttributeError, e:
             # This may fail if the file object doesn't allow assignment
-            newrelic.agent.record_exception(*sys.exc_info())
+            if hasattr(newrelic, 'agent'): # only record this when comming from wsgi
+                newrelic.agent.record_exception(*sys.exc_info())
         except:
             # Report if this fails
-            newrelic.agent.record_exception(*sys.exc_info())
+            if hasattr(newrelic, 'agent'): # only record this when comming from wsgi
+                newrelic.agent.record_exception(*sys.exc_info())
         headers = {"Content-Type": content_type}
 
         # gzip the file if its of the right content type
