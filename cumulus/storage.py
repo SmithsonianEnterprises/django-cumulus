@@ -382,7 +382,7 @@ class SwiftclientStorageFile(File):
         self._pos += len(data)
         return data
 
-    def readlines(self):
+    def readline(self):
         return self.read()
 
     def chunks(self, chunk_size=None):
